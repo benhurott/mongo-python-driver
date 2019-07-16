@@ -52,6 +52,7 @@ from pymongo.results import (BulkWriteResult,
                              InsertManyResult,
                              UpdateResult)
 from pymongo.write_concern import WriteConcern
+from pymongo.session_resolver import resolve_session
 
 _NO_OBJ_ERROR = "No matching object found"
 _UJOIN = u"%s.%s"
@@ -685,6 +686,7 @@ class Collection(common.BaseObject):
 
         .. versionadded:: 3.0
         """
+        session = resolve_session(session)
         common.validate_is_document_type("document", document)
         if not (isinstance(document, RawBSONDocument) or "_id" in document):
             document["_id"] = ObjectId()
@@ -738,6 +740,8 @@ class Collection(common.BaseObject):
 
         .. versionadded:: 3.0
         """
+        session = resolve_session(session)
+
         if not isinstance(documents, abc.Iterable) or not documents:
             raise TypeError("documents must be a non-empty list")
         inserted_ids = []
@@ -917,6 +921,8 @@ class Collection(common.BaseObject):
 
         .. versionadded:: 3.0
         """
+        session = resolve_session(session)
+
         common.validate_is_mapping("filter", filter)
         common.validate_ok_for_replace(replacement)
 
@@ -988,6 +994,8 @@ class Collection(common.BaseObject):
 
         .. versionadded:: 3.0
         """
+        session = resolve_session(session)
+
         common.validate_is_mapping("filter", filter)
         common.validate_ok_for_update(update)
         common.validate_list_or_none('array_filters', array_filters)
@@ -1061,6 +1069,8 @@ class Collection(common.BaseObject):
 
         .. versionadded:: 3.0
         """
+        session = resolve_session(session)
+
         common.validate_is_mapping("filter", filter)
         common.validate_ok_for_update(update)
         common.validate_list_or_none('array_filters', array_filters)
@@ -1193,6 +1203,8 @@ class Collection(common.BaseObject):
 
         .. versionadded:: 3.0
         """
+        session = resolve_session(session)
+
         write_concern = self._write_concern_for(session)
         return DeleteResult(
             self._delete_retryable(
@@ -1231,6 +1243,8 @@ class Collection(common.BaseObject):
 
         .. versionadded:: 3.0
         """
+        session = resolve_session(session)
+        
         write_concern = self._write_concern_for(session)
         return DeleteResult(
             self._delete_retryable(
